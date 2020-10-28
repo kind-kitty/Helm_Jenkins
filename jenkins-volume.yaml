@@ -18,8 +18,8 @@ spec:
     storage: 5Gi
   nfs:
     path: /
-    server: fs-7c3d8aed.efs.eu-north-1.amazonaws.com
-
+    server: fs-b2eb5a23.efs.eu-north-1.amazonaws.com
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:

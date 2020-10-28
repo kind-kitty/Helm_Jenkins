@@ -1,5 +1,39 @@
-apiVersion: extensions/v1beta1
-kind: Deployment
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-server-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: aws-efs
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+    - rsize=1048576
+    - wsize=1048576
+    - timeo=600
+    - retrans=2
+  nfs:
+    server: fs-b2eb5a23.efs.eu-north-1.amazonaws.com
+    path: /
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-server-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: aws-efs
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: nfs-server-pv
+---
+apiVersion: v1
+kind: ReplicationController
 metadata:
   name: nfs-server
 spec:
@@ -30,9 +64,9 @@ spec:
         - name: nfs-server-pv
           persistentVolumeClaim:
             claimName: nfs-server-pvc
+---
 apiVersion: v1
 kind: Service
-apiVersion: v1
 metadata:
   name: nfs-server
 spec:
@@ -45,37 +79,3 @@ spec:
       port: 111
   selector:
     role: nfs-server
-
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: nfs-server-pv
-spec:
-  capacity:
-    storage: 5Gi
-  accessModes:
-    - ReadWriteMany
-  storageClassname: aws-efs
-  mountOptions:
-    - hard
-    - nfsvers=4.1
-    - rsize=1048576
-    - wsize=1048576
-    - timeo=600
-    - retrans=2
-  nfs:
-    server: fs-7c3d8aed.efs.eu-north-1.amazonaws.com
-    path: /
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: nfs-server-pvc
-spec:
-  accessModes:
-    - ReadWriteMany
-  storageClassName: aws-efs
-  resources:
-    requests:
-      storage: 5Gi
-  volumeName: nfs-server-pv
