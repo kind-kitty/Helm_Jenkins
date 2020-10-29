@@ -17,8 +17,8 @@ spec:
   capacity:
     storage: 5Gi
   nfs:
-    path: /
-    server: fs-bab9082b.efs.eu-north-1.amazonaws.com
+    path: /jenkins
+    server: fs-a270c133.efs.eu-north-1.amazonaws.com
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
