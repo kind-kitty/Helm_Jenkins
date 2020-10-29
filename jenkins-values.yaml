@@ -2,9 +2,8 @@ master:
   #runAsUser: 0
   #usePodSecurityContext: true
   #fsGroup: 0
-  image: "tada/jenkins"
-  tag: "lts"
-  imagePullPolicy: IfNotPresent
+  image: "srikavyakola/jen"
+  tag: "latest"
   resources:
     requests:
       cpu: "1000m"
