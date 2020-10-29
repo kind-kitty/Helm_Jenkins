@@ -1,13 +1,14 @@
 master:
-  runAsUser: 0
-  #fsGroup: 1000
-  #image: "inventivepotter/jenkins"
-  #tag: "latest"
-  #imagePullPolicy: "IfNotPresent"
+  #runAsUser: 0
+  #usePodSecurityContext: true
+  #fsGroup: 0
+  image: "tada/jenkins"
+  tag: "lts"
+  imagePullPolicy: IfNotPresent
   resources:
     requests:
-      cpu: "300m"
-      memory: "280Mi"
+      cpu: "1000m"
+      memory: "1024Mi"
     limits:
       cpu: "2000m"
       memory: "4096Mi"
@@ -18,6 +19,7 @@ master:
   sidecars:
     configAutoReload:
       enabled: false
+  #nodeSelector: {"name" : "worker-group-2"}
 persistence:
   existingClaim: jenkins-pvc
   accessMode: "ReadWriteMany"
