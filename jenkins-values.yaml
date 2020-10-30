@@ -1,9 +1,10 @@
 master:
-  #runAsUser: 0
-  #usePodSecurityContext: true
-  #fsGroup: 0
-  image: "srikavyakola/jen"
-  tag: "latest"
+  runAsUser: 0
+  # usePodSecurityContext: true
+  # fsGroup: 0
+  # image: "inventivepotter/jenkins"
+  # tag: "latest"
+  # numExecutors: 0
   resources:
     requests:
       cpu: "1000m"
@@ -15,10 +16,11 @@ master:
     enabled: true
     apiVersion: "networking.k8s.io/v1beta1"
     hostName: jenkins.datalabs.tapestry.com
-  sidecars:
-    configAutoReload:
-      enabled: false
+  # sidecars:
+  #   configAutoReload:
+  #     enabled: false
   #nodeSelector: {"name" : "worker-group-2"}
+  initializeOnce: true
 persistence:
   existingClaim: jenkins-pvc
   accessMode: "ReadWriteMany"
