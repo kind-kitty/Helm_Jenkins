@@ -16,7 +16,7 @@ spec:
     - timeo=600
     - retrans=2
   nfs:
-    server: fs-a270c133.efs.eu-north-1.amazonaws.com
+    server: fs-cb30815a.efs.eu-north-1.amazonaws.com
     path: /
 ---
 apiVersion: v1

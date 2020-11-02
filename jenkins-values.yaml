@@ -1,10 +1,7 @@
 master:
   runAsUser: 0
-  # usePodSecurityContext: true
-  # fsGroup: 0
-  # image: "inventivepotter/jenkins"
-  # tag: "latest"
-  # numExecutors: 0
+  numExecutors: 2
+  enableXmlConfig: true
   resources:
     requests:
       cpu: "1000m"
@@ -12,15 +9,52 @@ master:
     limits:
       cpu: "2000m"
       memory: "4096Mi"
+  installPlugins:
+    - kubernetes:1.27.3
+    - workflow-job:2.40
+    - workflow-aggregator:2.6
+    - credentials-binding:1.24
+    - git:4.4.5
+    - configuration-as-code:1.45
+  additionalPlugins:
+    - role-strategy:3.1
   ingress:
     enabled: true
     apiVersion: "networking.k8s.io/v1beta1"
     hostName: jenkins.datalabs.tapestry.com
-  # sidecars:
-  #   configAutoReload:
-  #     enabled: false
-  #nodeSelector: {"name" : "worker-group-2"}
-  initializeOnce: true
+  #nodeSelector: {"name" : "jenkins-worker"}
+  initializeOnce: false
+
+  JCasC:
+    enabled: true
+    defaultConfig: true
+    configScripts:
+      welcome-message: |
+        jenkins:
+          systemMessage: Welcome to our CI\CD server. Please contact skola@tapestry.com for any issues.
+          securityRealm:
+            local:
+              allowsSignup: false
+              users:
+                - id: "admin"
+                  name: "admin"
+          authorizationStrategy:
+            roleBased:
+              roles:
+                global:
+                  - name: "admin"
+                    description: "Jenkins administrators"
+                    permissions:
+                      - "Overall/Administer"
+                    assignments:
+                      - "admin"
+                  - name: "developers"
+                    description: "Read-only users"
+                    permissions:
+                      - "Overall/Read"
+                      - "Job/Read"
+                    assignments:
+                      - "authenticated"
 persistence:
   existingClaim: jenkins-pvc
   accessMode: "ReadWriteMany"
