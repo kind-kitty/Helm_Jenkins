@@ -16,7 +16,7 @@ spec:
     - timeo=600
     - retrans=2
   nfs:
-    server: fs-cb30815a.efs.eu-north-1.amazonaws.com
+    server: fs-7bb60aea.efs.eu-north-1.amazonaws.com
     path: /
 ---
 apiVersion: v1
@@ -79,3 +79,17 @@ spec:
       port: 111
   selector:
     role: nfs-server
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+    name: nfs-ingress
+spec:
+  rules:
+  - host: nfs.local.com
+    http:
+      paths:
+      - path:
+        backend:
+          serviceName: nfs-server
+          servicePort: 2049
