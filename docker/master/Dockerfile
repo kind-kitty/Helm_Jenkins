@@ -9,5 +9,7 @@ RUN add-apt-repository \
        "deb [arch=amd64] https://download.docker.com/linux/debian \
        $(lsb_release -cs) stable"
 RUN apt-get update && apt-get install -y docker-ce docker-ce-cli containerd.io
+RUN usermod -aG docker $USER
 USER jenkins
+RUN usermod -aG docker $USER
 RUN jenkins-plugin-cli --plugins blueocean:1.24.3
