@@ -1,4 +1,4 @@
-master:
+controller:
   image: "srikavyakola/jenkins-docker"
   tag: "latest"
   runAsUser: 0
@@ -6,11 +6,11 @@ master:
   enableXmlConfig: true
   resources:
     requests:
-      cpu: "1000m"
-      memory: "1024Mi"
+      cpu: "200m"
+      memory: "250Mi"
     limits:
-      cpu: "2000m"
-      memory: "4096Mi"
+      cpu: "500m"
+      memory: "500Mi"
   containerEnv:
     - name: DOCKER_HOST 
       value: tcp://localhost:2375 
@@ -27,7 +27,6 @@ master:
     enabled: true
     apiVersion: "networking.k8s.io/v1beta1"
     hostName: jenkins.datalabs.tapestry.com
-  #nodeSelector: {"name" : "jenkins-worker"}
   initializeOnce: false
 
   JCasC:
@@ -94,18 +93,5 @@ persistence:
   volumes: 
   - name: docker-graph-storage 
     emptyDir: {}
-  # - name: ding
-  #   persistentVolumeClaim:
-  #     claimName: jenkins-dags-pvc
-  - name: ding-dong
-    nfs:
-      path: /tada
-      #readOnly: false
-      server: fs-7bb60aea.efs.eu-north-1.amazonaws.com
-      #serverPath: /tada
-  mounts:
-   - mountPath: /var/tidi
-     name: ding-dong
-     readOnly: false
 agent:
   enabled: false
