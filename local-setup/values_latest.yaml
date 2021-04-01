@@ -1,0 +1,90 @@
+controller:
+  image: "srikavyakola/jenkins-docker"
+  tag: "latest"
+  numExecutors: 2
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "250Mi"
+    limits:
+      cpu: "500m"
+      memory: "500Mi"
+  containerEnv:
+    - name: DOCKER_HOST 
+      value: tcp://localhost:2375 
+  runAsUser: 0
+  additionalPlugins: 
+    - role-strategy:3.1
+  initializeOnce: true
+  probes:
+    startupProbe:
+      failureThreshold: 3600
+    livenessProbe:
+      failureThreshold: 3600
+    readinessProbe:
+      failureThreshold: 3000
+
+  JCasC:
+    configScripts: 
+     welcome-message: |
+       jenkins:
+         systemMessage: Welcome to our CI\CD server.  This Jenkins is configured and managed 'as code'.
+    securityRealm: |-
+      local:
+        users:
+        - id: "admin"
+          name: "admin"
+    authorizationStrategy: |-
+      roleBased:
+        roles:
+          global:
+            - name: "admin"
+              description: "Jenkins administrators"
+              permissions:
+                - "Overall/Administer"
+              assignments:
+                - "admin"
+            - name: "developers"
+              description: "Read-only users"
+              permissions:
+                - "Overall/Read"
+                - "Job/Read"
+                - "Job/Read"
+              assignments:
+                - "authenticated" 
+
+  sidecars:
+    other: 
+    - name: dind-daemon 
+      image: docker:1.12.6-dind
+      imagePullPolicy: Always
+      resources:
+        limits:
+          cpu: 100m
+          memory: 512Mi
+        requests:
+          cpu: 20m
+          memory: 256Mi
+      securityContext: 
+        privileged: true 
+      volumeMounts: 
+      - name: docker-graph-storage
+        mountPath: /var/lib/docker
+
+  ingress:
+    enabled: true
+    hostName: jenkins.datalabs.tapestry.com
+  initializeOnce: false
+
+agent:
+  enabled: false
+
+persistence:
+  enabled: true
+  existingClaim: jenkins-pvc
+  accessMode: "ReadWriteMany"
+  volumes:
+  - name: docker-graph-storage 
+    emptyDir: {}
+
+

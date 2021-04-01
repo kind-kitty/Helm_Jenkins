@@ -1,0 +1,26 @@
+version: "3.4" # docker-compose version
+x-volumes: &volumes # volumes anchor (shared with all containers)
+  - .:/app
+  # - rdx:/root/.aws # maps local AWS credentials into the container
+services:
+  ci: 
+    #image: ci:stage
+    build: 
+      context: . 
+      dockerfile: Dockerfile
+    volumes: *volumes
+    tty: false # uses plain terminal formatting
+    container_name: "ci"
+    command: ["ls", "-lart"]
+      # - /bin/bash
+      # - -c
+      # - |
+      #   ls -lart
+#volumes:
+#   rdx:
+#     driver: local
+#     driver_opts:
+#       o: bind
+#       type: none
+#       device: /var/jenkins_home/workspace/roduct_Team_PR_validations_PR-17/.aws
+#  xxx:
