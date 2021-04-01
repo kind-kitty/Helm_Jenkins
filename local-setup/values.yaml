@@ -29,6 +29,14 @@ controller:
     hostName: jenkins.datalabs.tapestry.com
   initializeOnce: false
 
+  probes:
+    startupProbe:
+      failureThreshold: 1200
+    livenessProbe:
+      failureThreshold: 1200
+    readinessProbe:
+      failureThreshold: 1000
+
   JCasC:
     enabled: true
     defaultConfig: true
@@ -59,7 +67,7 @@ controller:
                       - "Job/Read"
                       - "Job/Read"
                     assignments:
-                      - "authenticated"   
+                      - "authenticated" 
   sidecars:
     other:
     - name: dind-daemon 

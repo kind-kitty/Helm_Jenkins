@@ -56,3 +56,10 @@ kubectl get deployment metrics-server -n kube-system
 # debug
 k get pods -n jenkins
 k describe pods jenkins-0 -n jenkins
+k logs jenkins-0 -n jenkins -c jenkins
+k logs jenkins-0 -n jenkins -c dind-daemon
+k exec -it jenkins-0 -n jenkins -- bash
+
+# docker-compose installation - https://docs.docker.com/compose/install/
+sudo curl -L "https://github.com/docker/compose/releases/download/1.28.6/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
